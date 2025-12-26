@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Smart Study Tracker | Premium Animated</title>
+    <meta name="theme-color" content="#6c63ff">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+</head>
+<body>
+    <!-- Theme Selector -->
+    <div class="theme-selector">
+        <div class="theme-option" data-theme="default" title="Default Theme"></div>
+        <div class="theme-option" data-theme="dark" title="Dark Theme"></div>
+        <div class="theme-option" data-theme="blue" title="Blue Theme"></div>
+        <div class="theme-option" data-theme="green" title="Green Theme"></div>
+    </div>
+
+    <!-- Calendar Popup -->
+    <div id="calendar-popup" class="calendar-popup">
+        <div class="calendar-popup-content">
+            <div class="calendar-popup-header">
+                <h3><i class="fas fa-calendar-alt"></i> আজকের তারিখ</h3>
+                <button id="close-calendar-popup" class="close-popup">&times;</button>
+            </div>
+            <div class="calendar-popup-body">
+                <div class="current-date-display">
+                    <h2 id="today-date"></h2>
+                    <p id="today-day"></p>
+                    <p id="today-time"></p>
+                </div>
+                <div class="next-event">
+                    <h4><i class="fas fa-bell"></i> আসন্ন ইভেন্ট</h4>
+                    <p id="next-event-text">কোনো ইভেন্ট নেই</p>
+                </div>
+            </div>
+            <div class="calendar-popup-footer">
+                <p>এই পপআপ ৩ সেকেন্ড পর অটো বন্ধ হবে</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo animate__animated animate__fadeInDown" id="logo-home">
+                <!-- Updated Logo with Custom Design -->
+                <div class="logo-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                    <div class="logo-dot"></div>
+                </div>
+                <h1>STUDY<span>TRACK</span></h1>
+            </div>
+            
+            <ul class="nav-links">
+                <li class="nav-item active" data-tab="home">
+                    <i class="fas fa-home"></i>
+                    <span>হোম</span>
+                </li>
+                <li class="nav-item" data-tab="daily-routine">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>ডেইলি রুটিন</span>
+                </li>
+                <li class="nav-item" data-tab="calendar">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>ক্যালেন্ডার</span>
+                </li>
+                <li class="nav-item" data-tab="study-timer">
+                    <i class="fas fa-hourglass-half"></i>
+                    <span>স্টাডি টাইমার</span>
+                </li>
+                <li class="nav-item" data-tab="history">
+                    <i class="fas fa-history"></i>
+                    <span>হিস্টরি</span>
+                </li>
+                <!-- Screen Time Tab Removed as requested -->
+                <li class="nav-item" data-tab="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>সেটিংস</span>
+                </li>
+            </ul>
+            
+            <div class="user-profile">
+                <div class="avatar" id="edit-profile-btn">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-info">
+                    <h4 id="user-name-display">লেওরা</h4>
+                    <p id="current-device-time">Loading...</p>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-title">
+                    <h2 id="current-tab-title">হোম</h2>
+                    <p id="current-date-time"></p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-notification" id="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notification-count">0</span>
+                    </button>
+                    <div class="quick-stats">
+                        <div class="stat">
+                            <span>আজ</span>
+                            <h4 id="today-study-time">0h 0m</h4>
+                        </div>
+                        <div class="stat">
+                            <span>এই সপ্তাহ</span>
+                            <h4 id="week-study-time">0h 0m</h4>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Tab Content Container -->
+            <div class="tab-content">
+                <!-- Home Tab -->
+                <div id="home-tab" class="tab-pane active">
+                    <div class="home-container">
+                        <div class="target-banner animate__animated animate__pulse animate__infinite">
+                            <h1>টার্গেট ইজ বুয়েট</h1>
+                        </div>
+                        
+                        <div class="challenge-info">
+                            <div class="challenge-card">
+                                <div class="challenge-header">
+                                    <i class="fas fa-bullseye"></i>
+                                    <h3>চ্যালেঞ্জ টাইমার</h3>
+                                </div>
+                                <div class="challenge-body">
+                                    <div class="form-group">
+                                        <label for="challenge-days">চ্যালেঞ্জ দিন সংখ্যা</label>
+                                        <input type="number" id="challenge-days" min="1" max="365" placeholder="দিন সংখ্যা">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="challenge-topic">চ্যালেঞ্জ টপিক</label>
+                                        <input type="text" id="challenge-topic" placeholder="টপিক নাম">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="challenge-start">শুরুর তারিখ</label>
+                                        <input type="text" id="challenge-start" class="date-input" placeholder="তারিখ সিলেক্ট করুন">
+                                    </div>
+                                    <button id="start-challenge" class="btn-primary">
+                                        <i class="fas fa-play"></i> চ্যালেঞ্জ শুরু করুন
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="challenge-timer">
+                                <div class="timer-display">
+                                    <div class="timer-circle">
+                                        <div class="timer-progress" id="challenge-timer-progress"></div>
+                                        <div class="timer-text">
+                                            <h1 id="challenge-countdown">00:00:00:00</h1>
+                                            <p id="challenge-status">চ্যালেঞ্জ সেট করুন</p>
+                                            <p id="challenge-topic-display">কোনো টপিক সিলেক্ট করা হয়নি</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="timer-message">
+                                        <p class="typing-container" id="home-warning-text"></p>
+                                    </div>
+                                    
+                                    <div class="timer-controls">
+                                        <button id="edit-challenge" class="btn-control">
+                                            <i class="fas fa-edit"></i> এডিট
+                                        </button>
+                                        <button id="start-challenge-timer" class="btn-control">
+                                            <i class="fas fa-play"></i> শুরু করুন
+                                        </button>
+                                        <button id="stop-challenge-timer" class="btn-control" disabled>
+                                            <i class="fas fa-stop"></i> থামান
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="home-content">
+                            <div class="topics-section">
+                                <div class="section-header">
+                                    <h3><i class="fas fa-list"></i> টপিক লিস্ট</h3>
+                                    <button id="add-topic-btn" class="btn-small">
+                                        <i class="fas fa-plus"></i> টপিক যোগ করুন
+                                    </button>
+                                </div>
+                                
+                                <div class="topics-list" id="topics-list-container">
+                                    <div class="empty-topics">
+                                        <i class="fas fa-book-open"></i>
+                                        <p>কোনো টপিক যোগ করা হয়নি। সেটিংস থেকে টপিক যোগ করুন।</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="stats-section">
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-fire"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h4>চ্যালেঞ্জ স্ট্রিক</h4>
+                                        <h2 id="challenge-streak">0 দিন</h2>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-trophy"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h4>সম্পূর্ণ টপিক</h4>
+                                        <h2 id="completed-topics">0</h2>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h4>সাফল্য হার</h4>
+                                        <h2 id="success-rate">0%</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="footer-text">
+                            <p id="footer-developed-by">Developed by আরাফাত</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daily Routine Tab -->
+                <div id="daily-routine-tab" class="tab-pane">
+                    <div class="daily-routine-container">
+                        <h2 class="section-title">ডেইলি রুটিন ট্র্যাকার</h2>
+                        <p class="section-subtitle">আপনার দৈনন্দিন রুটিন ট্র্যাক করুন</p>
+                        
+                        <div class="routine-controls">
+                            <div class="month-selector">
+                                <button id="prev-month"><i class="fas fa-chevron-left"></i></button>
+                                <h3 id="current-month">মার্চ ২০২৩</h3>
+                                <button id="next-month"><i class="fas fa-chevron-right"></i></button>
+                            </div>
+                            <button id="add-routine" class="btn-primary">
+                                <i class="fas fa-plus"></i> রুটিন যোগ করুন
+                            </button>
+                        </div>
+                        
+                        <div class="routine-calendar">
+                            <div class="calendar-header">
+                                <div class="day-header">রবি</div>
+                                <div class="day-header">সোম</div>
+                                <div class="day-header">মঙ্গল</div>
+                                <div class="day-header">বুধ</div>
+                                <div class="day-header">বৃহস্পতি</div>
+                                <div class="day-header">শুক্র</div>
+                                <div class="day-header">শনি</div>
+                            </div>
+                            <div class="calendar-days" id="routine-calendar-days">
+                                <!-- Calendar days will be generated by JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <div class="routine-stats">
+                            <div class="stat-card large">
+                                <h4>এই মাসের সারাংশ</h4>
+                                <div class="stat-details">
+                                    <div class="stat-item">
+                                        <span class="stat-label">প্রাইভেট</span>
+                                        <span class="stat-value" id="private-days">0/12 দিন</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">কলেজ</span>
+                                        <span class="stat-value" id="college-days">0/26 দিন</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">মিসড</span>
+                                        <span class="stat-value" id="missed-days">0 দিন</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="routine-settings">
+                                <h3>রুটিন সেটিংস</h3>
+                                <div class="routine-form">
+                                    <div class="form-group">
+                                        <label for="private-per-month">প্রতি মাসে প্রাইভেট দিন</label>
+                                        <input type="number" id="private-per-month" value="12" min="0" max="31">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="college-per-month">প্রতি মাসে কলেজ দিন</label>
+                                        <input type="number" id="college-per-month" value="26" min="0" max="31">
+                                    </div>
+                                    <button id="save-routine-settings" class="btn-primary">সেটিংস সেভ করুন</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="routine-chart">
+                            <canvas id="routineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendar Tab -->
+                <div id="calendar-tab" class="tab-pane">
+                    <div class="calendar-container">
+                        <h2 class="section-title">ইভেন্ট ক্যালেন্ডার</h2>
+                        <p class="section-subtitle">আপনার গুরুত্বপূর্ণ তারিখ এবং ইভেন্টগুলো ট্র্যাক করুন</p>
+                        
+                        <div class="calendar-main">
+                            <div class="calendar-widget">
+                                <div class="calendar-header">
+                                    <button id="calendar-prev"><i class="fas fa-chevron-left"></i></button>
+                                    <h3 id="calendar-month-year">মার্চ ২০২৩</h3>
+                                    <button id="calendar-next"><i class="fas fa-chevron-right"></i></button>
+                                </div>
+                                <div class="calendar-weekdays">
+                                    <div class="weekday">রবি</div>
+                                    <div class="weekday">সোম</div>
+                                    <div class="weekday">মঙ্গল</div>
+                                    <div class="weekday">বুধ</div>
+                                    <div class="weekday">বৃহস্পতি</div>
+                                    <div class="weekday">শুক্র</div>
+                                    <div class="weekday">শনি</div>
+                                </div>
+                                <div class="calendar-dates" id="calendar-dates">
+                                    <!-- Calendar dates will be generated by JavaScript -->
+                                </div>
+                            </div>
+                            
+                            <div class="events-section">
+                                <div class="events-header">
+                                    <h3><i class="fas fa-calendar-day"></i> আজকের ইভেন্ট</h3>
+                                    <button id="add-event-btn" class="btn-small">
+                                        <i class="fas fa-plus"></i> ইভেন্ট যোগ করুন
+                                    </button>
+                                </div>
+                                
+                                <div class="events-list" id="today-events">
+                                    <div class="empty-events">
+                                        <i class="fas fa-calendar-times"></i>
+                                        <p>আজকের কোনো ইভেন্ট নেই</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="upcoming-events">
+                                    <h4><i class="fas fa-calendar-week"></i> আসন্ন ইভেন্ট</h4>
+                                    <div class="upcoming-list" id="upcoming-events">
+                                        <div class="empty-upcoming">
+                                            <p>কোনো আসন্ন ইভেন্ট নেই</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="event-form-container">
+                            <h3>নতুন ইভেন্ট যোগ করুন</h3>
+                            <div class="event-form">
+                                <div class="form-group">
+                                    <label for="event-title">ইভেন্ট টাইটেল</label>
+                                    <input type="text" id="event-title" placeholder="ইভেন্টের নাম">
+                                </div>
+                                <div class="form-group">
+                                    <label for="event-date">তারিখ</label>
+                                    <input type="text" id="event-date" class="date-input" placeholder="তারিখ সিলেক্ট করুন">
+                                </div>
+                                <div class="form-group">
+                                    <label for="event-time">সময় (ঐচ্ছিক)</label>
+                                    <input type="time" id="event-time">
+                                </div>
+                                <div class="form-group">
+                                    <label for="event-description">বর্ণনা</label>
+                                    <textarea id="event-description" rows="3" placeholder="ইভেন্টের বিস্তারিত"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="event-alarm">অ্যালার্ম</label>
+                                    <select id="event-alarm">
+                                        <option value="none">অ্যালার্ম নেই</option>
+                                        <option value="5">৫ মিনিট আগে</option>
+                                        <option value="15">১৫ মিনিট আগে</option>
+                                        <option value="30">৩০ মিনিট আগে</option>
+                                        <option value="60">১ ঘন্টা আগে</option>
+                                        <option value="1440">১ দিন আগে</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="event-color">রং সিলেক্ট করুন</label>
+                                    <div class="color-options">
+                                        <div class="color-option" data-color="#6c63ff" style="background-color: #6c63ff;"></div>
+                                        <div class="color-option" data-color="#ff6584" style="background-color: #ff6584;"></div>
+                                        <div class="color-option" data-color="#4CAF50" style="background-color: #4CAF50;"></div>
+                                        <div class="color-option" data-color="#2196F3" style="background-color: #2196F3;"></div>
+                                        <div class="color-option" data-color="#FF9800" style="background-color: #FF9800;"></div>
+                                    </div>
+                                </div>
+                                <button id="save-event" class="btn-primary">
+                                    <i class="fas fa-save"></i> ইভেন্ট সেভ করুন
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Study Timer Tab -->
+                <div id="study-timer-tab" class="tab-pane">
+                    <div class="study-timer-container">
+                        <h2 class="section-title">স্টাডি টাইমার (প্রোমোডোরো মেথড)</h2>
+                        <p class="section-subtitle">দৈনিক পড়াশোনার সময় ট্র্যাক করুন</p>
+                        
+                        <div class="daily-timer-section">
+                            <div class="daily-stats">
+                                <div class="stat-card">
+                                    <h4>আজকের লক্ষ্য</h4>
+                                    <h2 id="daily-goal">2 ঘন্টা</h2>
+                                    <button id="edit-daily-goal" class="btn-small">এডিট</button>
+                                </div>
+                                <div class="stat-card">
+                                    <h4>আজ পড়েছেন</h4>
+                                    <h2 id="today-studied">0h 0m</h2>
+                                    <div class="progress-bar-small">
+                                        <div class="progress-fill" id="daily-progress"></div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <h4>বর্তমান সেশন</h4>
+                                    <h2 id="current-session">0</h2>
+                                    <p id="session-type">ব্রেক</p>
+                                </div>
+                            </div>
+                            
+                            <div class="pomodoro-timer">
+                                <div class="pomodoro-display">
+                                    <div class="timer-circle-large">
+                                        <div class="timer-progress-large" id="pomodoro-progress"></div>
+                                        <div class="timer-text-large">
+                                            <h1 id="pomodoro-countdown">25:00</h1>
+                                            <p id="pomodoro-status">স্টাডি সেশন</p>
+                                            <p id="pomodoro-session">সেশন 1 of 4</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="pomodoro-controls">
+                                    <button id="pomodoro-start" class="btn-pomodoro">
+                                        <i class="fas fa-play"></i> শুরু করুন
+                                    </button>
+                                    <button id="pomodoro-pause" class="btn-pomodoro">
+                                        <i class="fas fa-pause"></i> পজ করুন
+                                    </button>
+                                    <button id="pomodoro-skip" class="btn-pomodoro">
+                                        <i class="fas fa-forward"></i> স্কিপ করুন
+                                    </button>
+                                    <button id="pomodoro-reset" class="btn-pomodoro">
+                                        <i class="fas fa-redo"></i> রিসেট করুন
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="pomodoro-settings-section">
+                            <div class="pomodoro-settings">
+                                <h3>টাইমার সেটিংস</h3>
+                                <div class="pomodoro-inputs">
+                                    <div class="input-group">
+                                        <label for="pomodoro-study">স্টাডি সময় (মিনিট)</label>
+                                        <input type="number" id="pomodoro-study" value="25" min="5" max="120">
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="pomodoro-break">ব্রেক সময় (মিনিট)</label>
+                                        <input type="number" id="pomodoro-break" value="5" min="5" max="30">
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="pomodoro-sessions">সেশন সংখ্যা</label>
+                                        <input type="number" id="pomodoro-sessions" value="4" min="1" max="10">
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="daily-study-goal">দৈনিক লক্ষ্য (ঘন্টা)</label>
+                                        <input type="number" id="daily-study-goal" value="2" min="1" max="12" step="0.5">
+                                    </div>
+                                    <button id="apply-pomodoro" class="btn-primary">সেটিংস অ্যাপ্লাই করুন</button>
+                                </div>
+                            </div>
+                            
+                            <div class="pomodoro-sessions">
+                                <h3>সেশন প্রোগ্রেস</h3>
+                                <div class="sessions-container" id="sessions-container">
+                                    <!-- Sessions will be generated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="study-history">
+                            <h3>আজকের পড়াশোনার হিস্ট্রি</h3>
+                            <div class="history-list" id="today-study-history">
+                                <div class="empty-history">
+                                    <i class="fas fa-history"></i>
+                                    <p>আজকের কোনো পড়াশোনার রেকর্ড নেই</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History Tab -->
+                <div id="history-tab" class="tab-pane">
+                    <div class="history-container">
+                        <h2 class="section-title">হিস্টরি</h2>
+                        <p class="section-subtitle">আপনি কোন দিন কত সময় পড়াশোনা করেছেন</p>
+                        
+                        <div class="history-controls">
+                            <div class="filter-options">
+                                <button class="filter-btn active" data-filter="all">সব</button>
+                                <button class="filter-btn" data-filter="today">আজ</button>
+                                <button class="filter-btn" data-filter="week">এই সপ্তাহ</button>
+                                <button class="filter-btn" data-filter="month">এই মাস</button>
+                                <button class="filter-btn" data-filter="custom">কাস্টম</button>
+                            </div>
+                            <div class="date-range" id="custom-date-range" style="display: none;">
+                                <input type="text" id="start-date" class="date-input" placeholder="শুরুর তারিখ">
+                                <span>থেকে</span>
+                                <input type="text" id="end-date" class="date-input" placeholder="শেষের তারিখ">
+                                <button id="apply-date-range" class="btn-small">অ্যাপ্লাই</button>
+                            </div>
+                        </div>
+                        
+                        <div class="history-stats">
+                            <div class="stat-card">
+                                <h4>মোট পড়াশোনার সময়</h4>
+                                <h2 id="total-study-time">0h 0m</h2>
+                            </div>
+                            <div class="stat-card">
+                                <h4>গড় প্রতিদিন</h4>
+                                <h2 id="average-daily">0h 0m</h2>
+                            </div>
+                            <div class="stat-card">
+                                <h4>সর্বোচ্চ দিন</h4>
+                                <h2 id="max-daily">0h 0m</h2>
+                            </div>
+                        </div>
+                        
+                        <div class="history-chart">
+                            <canvas id="historyChart"></canvas>
+                        </div>
+                        
+                        <div class="history-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>তারিখ</th>
+                                        <th>টপিক</th>
+                                        <th>সময়</th>
+                                        <th>সেশন</th>
+                                        <th>স্ট্যাটাস</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="history-table-body">
+                                    <tr>
+                                        <td colspan="5" class="no-data">কোনো ডাটা পাওয়া যায়নি</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Screen Time Tab Removed as requested -->
+
+                <!-- Settings Tab -->
+                <div id="settings-tab" class="tab-pane">
+                    <div class="settings-container">
+                        <h2 class="section-title">সেটিংস</h2>
+                        
+                        <div class="settings-grid">
+                            <!-- Home Text Edit Section -->
+                            <div class="settings-card">
+                                <div class="settings-header">
+                                    <i class="fas fa-edit"></i>
+                                    <h3>হোম পেইজ টেক্সট</h3>
+                                </div>
+                                <div class="settings-body">
+                                    <div class="form-group">
+                                        <label for="home-text">টাইপিং ইফেক্ট টেক্সট</label>
+                                        <textarea id="home-text" rows="3" placeholder="টাইপিং ইফেক্টের জন্য টেক্সট লিখুন">"কুত্তার বাইচ্চা টাইম শেষ ওই যার ফড়াত ব!! ১বছরে শেষ না করলে মারা"</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="footer-text">ফুটার টেক্সট</label>
+                                        <input type="text" id="footer-text" value="Developed by আরাফাত" placeholder="ফুটার টেক্সট">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="typing-effect">টাইপিং ইফেক্ট</label>
+                                        <label class="switch">
+                                            <input type="checkbox" id="typing-effect" checked>
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                    <button id="save-home-text" class="btn-primary">সেভ করুন</button>
+                                </div>
+                            </div>
+
+                            <!-- Profile Edit Section -->
+                            <div class="settings-card">
+                                <div class="settings-header">
+                                    <i class="fas fa-user-edit"></i>
+                                    <h3>প্রোফাইল সেটিংস</h3>
+                                </div>
+                                <div class="settings-body">
+                                    <div class="form-group">
+                                        <label for="user-name">আপনার নাম</label>
+                                        <input type="text" id="user-name" value="লেওরা" placeholder="আপনার নাম লিখুন">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="user-avatar">আভাটার রং</label>
+                                        <input type="color" id="user-avatar-color" value="#6c63ff">
+                                    </div>
+                                    <button id="save-profile" class="btn-primary">প্রোফাইল সেভ করুন</button>
+                                </div>
+                            </div>
+
+                            <div class="settings-card">
+                                <div class="settings-header">
+                                    <i class="fas fa-palette"></i>
+                                    <h3>থিম সেটিংস</h3>
+                                </div>
+                                <div class="settings-body">
+                                    <p>ওয়েবসাইটের থিম পরিবর্তন করুন</p>
+                                    <div class="theme-options">
+                                        <div class="theme-select" data-theme="default">
+                                            <div class="theme-preview default-theme"></div>
+                                            <span>ডিফল্ট</span>
+                                        </div>
+                                        <div class="theme-select" data-theme="dark">
+                                            <div class="theme-preview dark-theme"></div>
+                                            <span>ডার্ক</span>
+                                        </div>
+                                        <div class="theme-select" data-theme="blue">
+                                            <div class="theme-preview blue-theme"></div>
+                                            <span>ব্লু</span>
+                                        </div>
+                                        <div class="theme-select" data-theme="green">
+                                            <div class="theme-preview green-theme"></div>
+                                            <span>গ্রীন</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="text-color">টেক্সট রং</label>
+                                        <input type="color" id="text-color" value="#212529">
+                                    </div>
+                                    <button id="apply-theme" class="btn-primary">থিম অ্যাপ্লাই করুন</button>
+                                </div>
+                            </div>
+                            
+                            <div class="settings-card">
+                                <div class="settings-header">
+                                    <i class="fas fa-clock"></i>
+                                    <h3>টাইমার সেটিংস</h3>
+                                </div>
+                                <div class="settings-body">
+                                    <p>সকল টাইমার কাস্টমাইজ করুন</p>
+                                    <div class="timer-settings">
+                                        <div class="form-group">
+                                            <label for="study-duration">স্টাডি সময় (মিনিট)</label>
+                                            <input type="number" id="study-duration" value="25" min="5" max="120">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="break-duration">ব্রেক সময় (মিনিট)</label>
+                                            <input type="number" id="break-duration" value="5" min="5" max="60">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="auto-start-break">অটো স্টার্ট ব্রেক</label>
+                                            <label class="switch">
+                                                <input type="checkbox" id="auto-start-break" checked>
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                        <button id="save-timer-settings" class="btn-primary">সেটিংস সেভ করুন</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Ringtone Settings -->
+                            <div class="settings-card">
+                                <div class="settings-header">
+                                    <i class="fas fa-bell"></i>
+                                    <h3>নোটিফিকেশন সেটিংস</h3>
+                                </div>
+                                <div class="settings-body">
+                                    <div class="ringtone-options">
+                                        <div class="ringtone-select" data-ringtone="alarm1">
+                                            <i class="fas fa-bell"></i>
+                                            <span>অ্যালার্ম ১</span>
+                                            <button class="preview-btn"><i class="fas fa-play"></i></button>
+                                        </div>
+                                        <div class="ringtone-select" data-ringtone="alarm2">
+                                            <i class="fas fa-bell"></i>
+                                            <span>অ্যালার্ম ২</span>
+                                            <button class="preview-btn"><i class="fas fa-play"></i></button>
+                                        </div>
+                                        <div class="ringtone-select active" data-ringtone="alarm3">
+                                            <i class="fas fa-bell"></i>
+                                            <span>অ্যালার্ম ৩</span>
+                                            <button class="preview-btn"><i class="fas fa-play"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="alarm-volume">অ্যালার্ম ভলিউম</label>
+                                        <input type="range" id="alarm-volume" min="0" max="100" value="50">
+                                        <span id="volume-value">50%</span>
+                                    </div>
+                                    <div class="toggle-settings">
+                                        <div class="toggle-item">
+                                            <span>নোটিফিকেশন</span>
+                                            <label class="switch">
+                                                <input type="checkbox" id="notifications" checked>
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                        <div class="toggle-item">
+                                            <span>সাউন্ড ইফেক্ট</span>
+                                            <label class="switch">
+                                                <input type="checkbox" id="sound-effects" checked>
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                        <div class="toggle-item">
+                                            <span>অ্যানিমেশন</span>
+                                            <label class="switch">
+                                                <input type="checkbox" id="animations" checked>
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <button id="save-ringtone" class="btn-primary">সেটিংস সেভ করুন</button>
+                                </div>
+                            </div>
+
+                            <!-- Topic Management -->
+                            <div class="settings-card">
+                                <div class="settings-header">
+                                    <i class="fas fa-book"></i>
+                                    <h3>টপিক ম্যানেজমেন্ট</h3>
+                                </div>
+                                <div class="settings-body">
+                                    <div class="topic-management">
+                                        <div class="form-group">
+                                            <label for="topic-name">নতুন টপিক নাম</label>
+                                            <input type="text" id="topic-name" placeholder="টপিকের নাম">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="topic-desc">বর্ণনা</label>
+                                            <input type="text" id="topic-desc" placeholder="টপিকের বর্ণনা">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="topic-color">রং</label>
+                                            <input type="color" id="topic-color" value="#6c63ff">
+                                        </div>
+                                        <button id="add-topic" class="btn-primary">টপিক যোগ করুন</button>
+                                    </div>
+                                    
+                                    <div class="existing-topics">
+                                        <h4>বিদ্যমান টপিকসমূহ</h4>
+                                        <div class="topics-list-small" id="existing-topics-list">
+                                            <!-- Existing topics will be loaded here -->
+                                        </div>
+                                        <button id="clear-topics" class="btn-secondary danger" style="margin-top: 10px;">
+                                            <i class="fas fa-trash"></i> সব টপিক মুছুন
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Data Management -->
+                            <div class="settings-card">
+                                <div class="settings-header">
+                                    <i class="fas fa-database"></i>
+                                    <h3>ডেটা ম্যানেজমেন্ট</h3>
+                                </div>
+                                <div class="settings-body">
+                                    <div class="data-management">
+                                        <button id="export-data" class="btn-secondary">
+                                            <i class="fas fa-download"></i> ডেটা এক্সপোর্ট করুন
+                                        </button>
+                                        <button id="import-data" class="btn-secondary">
+                                            <i class="fas fa-upload"></i> ডেটা ইম্পোর্ট করুন
+                                        </button>
+                                        <button id="clear-data" class="btn-secondary danger">
+                                            <i class="fas fa-trash-alt"></i> সব ডেটা মুছুন
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Device Info -->
+                            <div class="settings-card">
+                                <div class="settings-header">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <h3>ডিভাইস তথ্য</h3>
+                                </div>
+                                <div class="settings-body">
+                                    <div class="device-info">
+                                        <p><strong>সময়:</strong> <span id="device-time-info">Loading...</span></p>
+                                        <p><strong>তারিখ:</strong> <span id="device-date-info">Loading...</span></p>
+                                        <p><strong>টাইমজোন:</strong> <span id="device-timezone">Loading...</span></p>
+                                        <p><strong>ব্রাউজার:</strong> <span id="browser-info">Loading...</span></p>
+                                        <p><strong>অনলাইন:</strong> <span id="online-status">হ্যাঁ</span></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="timezone-select">টাইমজোন</label>
+                                        <select id="timezone-select">
+                                            <option value="auto">অটো ডিটেক্ট</option>
+                                            <!-- Timezones will be populated by JavaScript -->
+                                        </select>
+                                    </div>
+                                    <button id="sync-device-time" class="btn-primary">
+                                        <i class="fas fa-sync-alt"></i> ডিভাইস টাইম সিঙ্ক করুন
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- About App -->
+                            <div class="settings-card">
+                                <div class="settings-header">
+                                    <i class="fas fa-info-circle"></i>
+                                    <h3>অ্যাপ সম্পর্কে</h3>
+                                </div>
+                                <div class="settings-body">
+                                    <div class="about-info">
+                                        <p><strong>সংস্করণ:</strong> <span>3.0.0</span></p>
+                                        <p><strong>বিল্ড:</strong> <span>২০২৩১২২৬</span></p>
+                                        <p><strong>ডেভেলপার:</strong> <span>আরাফাত</span></p>
+                                        <p><strong>কন্টাক্ট:</strong> <span>arafat@example.com</span></p>
+                                    </div>
+                                    <div class="app-actions">
+                                        <button id="check-updates" class="btn-secondary">
+                                            <i class="fas fa-redo"></i> আপডেট চেক করুন
+                                        </button>
+                                        <button id="report-bug" class="btn-secondary">
+                                            <i class="fas fa-bug"></i> বাগ রিপোর্ট করুন
+                                        </button>
+                                        <button id="share-app" class="btn-secondary">
+                                            <i class="fas fa-share-alt"></i> শেয়ার করুন
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Audio for ringtones -->
+    <audio id="alarm-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3"></audio>
+    
+    <!-- Modal for adding topic -->
+    <div id="add-topic-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>নতুন টপিক যোগ করুন</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="new-topic-name">টপিক নাম</label>
+                    <input type="text" id="new-topic-name" placeholder="টপিকের নাম">
+                </div>
+                <div class="form-group">
+                    <label for="new-topic-description">বর্ণনা</label>
+                    <input type="text" id="new-topic-description" placeholder="সংক্ষিপ্ত বর্ণনা">
+                </div>
+                <div class="form-group">
+                    <label for="new-topic-color">রং</label>
+                    <input type="color" id="new-topic-color" value="#6c63ff">
+                </div>
+                <div class="form-group">
+                    <label for="new-topic-icon">আইকন সিলেক্ট করুন</label>
+                    <div class="icon-options">
+                        <div class="icon-option" data-icon="book"><i class="fas fa-book"></i></div>
+                        <div class="icon-option" data-icon="flask"><i class="fas fa-flask"></i></div>
+                        <div class="icon-option" data-icon="code"><i class="fas fa-code"></i></div>
+                        <div class="icon-option" data-icon="calculator"><i class="fas fa-calculator"></i></div>
+                        <div class="icon-option" data-icon="language"><i class="fas fa-language"></i></div>
+                        <div class="icon-option" data-icon="pencil-alt"><i class="fas fa-pencil-alt"></i></div>
+                    </div>
+                </div>
+                <button id="save-new-topic" class="btn-primary">টপিক সেভ করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for adding event -->
+    <div id="add-event-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>নতুন ইভেন্ট যোগ করুন</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <!-- Event form will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for adding routine -->
+    <div id="add-routine-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>নতুন রুটিন যোগ করুন</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="routine-type">রুটিন টাইপ</label>
+                    <select id="routine-type">
+                        <option value="private">প্রাইভেট</option>
+                        <option value="college">কলেজ</option>
+                        <option value="other">অন্যান্য</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="routine-date">তারিখ</label>
+                    <input type="text" id="routine-date" class="date-input" placeholder="তারিখ সিলেক্ট করুন">
+                </div>
+                <div class="form-group">
+                    <label for="routine-time">সময়</label>
+                    <input type="time" id="routine-time">
+                </div>
+                <div class="form-group">
+                    <label for="routine-duration">সময়কাল (মিনিট)</label>
+                                    <input type="number" id="routine-duration" min="30" max="480" value="60">
+                                </div>
+                                <div class="form-group">
+                                    <label for="routine-attended">এটেন্ড করেছে</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="routine-attended" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <button id="save-routine" class="btn-primary">রুটিন সেভ করুন</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Edit Modal -->
+                    <div id="profile-edit-modal" class="modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3>প্রোফাইল এডিট করুন</h3>
+                                <span class="close-modal">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="edit-user-name">আপনার নাম</label>
+                                    <input type="text" id="edit-user-name" placeholder="আপনার নাম লিখুন" value="লেওরা">
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit-avatar-color">আভাটার রং</label>
+                                    <input type="color" id="edit-avatar-color" value="#6c63ff">
+                                </div>
+                                <button id="save-profile-changes" class="btn-primary">সেভ করুন</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scripts -->
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/bn.js"></script>
+                    <script src="script.js"></script>
+                </body>
+                </html>

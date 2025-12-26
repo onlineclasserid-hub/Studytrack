@@ -1,0 +1,107 @@
+{
+    "name": "Smart Study Tracker",
+    "short_name": "StudyTrack",
+    "description": "A premium animated study tracker with multiple features",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#f8f9fa",
+    "theme_color": "#6c63ff",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>",
+            "sizes": "72x72",
+            "type": "image/svg+xml"
+        },
+        {
+            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='96'>📚</text></svg>",
+            "sizes": "96x96",
+            "type": "image/svg+xml"
+        },
+        {
+            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='128'>📚</text></svg>",
+            "sizes": "128x128",
+            "type": "image/svg+xml"
+        },
+        {
+            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='144'>📚</text></svg>",
+            "sizes": "144x144",
+            "type": "image/svg+xml"
+        },
+        {
+            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='152'>📚</text></svg>",
+            "type": "image/svg+xml",
+            "sizes": "152x152"
+        },
+        {
+            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='192'>📚</text></svg>",
+            "sizes": "192x192",
+            "type": "image/svg+xml"
+        },
+        {
+            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='512'>📚</text></svg>",
+            "sizes": "512x512",
+            "type": "image/svg+xml"
+        }
+    ],
+    "permissions": [
+        "notifications",
+        "storage",
+        "clipboard-write"
+    ],
+    "categories": ["education", "productivity", "utilities"],
+    "shortcuts": [
+        {
+            "name": "Start Study Timer",
+            "short_name": "Timer",
+            "description": "Start a new study session",
+            "url": "./index.html?tab=study-timer"
+        },
+        {
+            "name": "Add New Topic",
+            "short_name": "Add Topic",
+            "description": "Add a new study topic",
+            "url": "./index.html?tab=settings&action=add-topic"
+        },
+        {
+            "name": "View History",
+            "short_name": "History",
+            "description": "View your study history",
+            "url": "./index.html?tab=history"
+        }
+    ],
+    "prefer_related_applications": false,
+    "related_applications": [],
+    "display_override": ["window-controls-overlay"],
+    "launch_handler": {
+        "client_mode": "focus-existing"
+    },
+    "handle_links": "preferred",
+    "scope": "./",
+    "id": "/study-tracker",
+    "lang": "bn",
+    "dir": "ltr",
+    "screenshots": [
+        {
+            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='1280' height='720'><rect width='100%' height='100%' fill='%236c63ff'/><text x='50%' y='50%' text-anchor='middle' fill='white' font-size='72' font-family='Arial'>Study Tracker</text><text x='50%' y='60%' text-anchor='middle' fill='white' font-size='36'>Productivity App</text></svg>",
+            "sizes": "1280x720",
+            "type": "image/svg+xml",
+            "form_factor": "wide"
+        },
+        {
+            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='720' height='1280'><rect width='100%' height='100%' fill='%236c63ff'/><text x='50%' y='50%' text-anchor='middle' fill='white' font-size='48' font-family='Arial'>Study Tracker</text><text x='50%' y='55%' text-anchor='middle' fill='white' font-size='24'>Productivity App</text></svg>",
+            "sizes": "720x1280",
+            "type": "image/svg+xml",
+            "form_factor": "narrow"
+        }
+    ],
+    "edge_side_panel": {
+        "preferred_width": 360
+    },
+    "protocol_handlers": [
+        {
+            "protocol": "web+studytrack",
+            "url": "./index.html?action=%s"
+        }
+    ]
+}
